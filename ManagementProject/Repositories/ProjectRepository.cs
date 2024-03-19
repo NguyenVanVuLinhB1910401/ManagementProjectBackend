@@ -15,12 +15,16 @@ namespace ManagementProject.Repositories
 
         public async  Task<IEnumerable<Project>> GetAllProject()
         {
-            return await _context.Projects.Where(d => d.Status == 1).OrderByDescending(d => d.Created).ToListAsync();
+            return await _context.Projects.Where(d => d.isProject == 1 && d.isDelete == 0).OrderByDescending(d => d.Created).ToListAsync();
         }
 
-        public async Task<Project> GetById(string id)
+        public async Task<Project?> GetById(string id)
         {
-            return await _context.Projects.Where(p => p.Id == id).Include(p => p.Members).FirstOrDefaultAsync();
+            return await _context.Projects
+                                          .Where(p => p.Id == id)
+                                          .Include(p => p.Members)
+                                          .ThenInclude(p => p.Member)
+                                          .FirstOrDefaultAsync();
         }
     }
 }
