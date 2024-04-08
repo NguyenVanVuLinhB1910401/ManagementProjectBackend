@@ -1,7 +1,7 @@
 ﻿using ManagementProject.Models;
-using ManagementProject.Repositories;
+
 using ManagementProject.Interfaces;
-using ManagementProject.Models;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace ManagementProject.Repositories

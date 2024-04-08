@@ -11,6 +11,11 @@ namespace ManagementProject.Interfaces
         IDepartmentRepository Departments { get; }
         IProjectRepository Projects { get; }
         IProjectMemberRepository ProjectMembers { get; }
+        IWorkRepository Works { get; }
+        IAttachmentFileRepository AttachmentFiles { get; }
+        ICommentRepository Comments { get; }
+        IQuyTrinhRepository QuyTrinhs { get; }
+        IBuocThucHienRepository BuocThucHiens { get; }
         int Complete();
         void BeginTransaction();
         void CommitTransaction();

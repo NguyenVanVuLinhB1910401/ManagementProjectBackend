@@ -138,6 +138,123 @@ namespace ManagementProject.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("ManagementProject.Models.AttachmentFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("WorkId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("WorkId");
+
+                    b.ToTable("AttachmentFiles");
+                });
+
+            modelBuilder.Entity("ManagementProject.Models.BuocThucHien", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BuocTiepTheo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BuocTruocDo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("NgayCapNhat")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("NgayTao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NguoiThucHienId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("QuyTrinhId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TenBuoc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("NguoiThucHienId");
+
+                    b.HasIndex("QuyTrinhId");
+
+                    b.ToTable("BuocThucHiens");
+                });
+
+            modelBuilder.Entity("ManagementProject.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("WorkId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("WorkId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("ManagementProject.Models.Department", b =>
                 {
                     b.Property<string>("Id")
@@ -176,6 +293,9 @@ namespace ManagementProject.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int>("BuocHienTaiId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("CompleteDate")
                         .HasColumnType("datetime2");
 
@@ -193,6 +313,9 @@ namespace ManagementProject.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("QuyTrinhId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
@@ -212,7 +335,11 @@ namespace ManagementProject.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BuocHienTaiId");
+
                     b.HasIndex("CreatedId");
+
+                    b.HasIndex("QuyTrinhId");
 
                     b.ToTable("Projects");
                 });
@@ -245,6 +372,104 @@ namespace ManagementProject.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectMembers");
+                });
+
+            modelBuilder.Entity("ManagementProject.Models.QuyTrinh", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("NgayCapNhat")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("NgayTao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NguoiTaoId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TenQuyTrinh")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("isDelete")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NguoiTaoId");
+
+                    b.ToTable("QuyTrinhs");
+                });
+
+            modelBuilder.Entity("ManagementProject.Models.Work", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AssignUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CompleteDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(MAX)");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ParentWorkId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Progress")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProjectId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("isChuyenBuoc")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignUserId");
+
+                    b.HasIndex("CreatedUserId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("Works");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -390,15 +615,84 @@ namespace ManagementProject.Migrations
                     b.Navigation("Department");
                 });
 
+            modelBuilder.Entity("ManagementProject.Models.AttachmentFile", b =>
+                {
+                    b.HasOne("ManagementProject.Models.Comment", null)
+                        .WithMany("AttachmentFiles")
+                        .HasForeignKey("CommentId");
+
+                    b.HasOne("ManagementProject.Models.Work", "Work")
+                        .WithMany("AttachmentFiles")
+                        .HasForeignKey("WorkId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Work");
+                });
+
+            modelBuilder.Entity("ManagementProject.Models.BuocThucHien", b =>
+                {
+                    b.HasOne("ManagementProject.Models.ApplicationUser", "NguoiThucHien")
+                        .WithMany("BuocThucHiens")
+                        .HasForeignKey("NguoiThucHienId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ManagementProject.Models.QuyTrinh", "QuyTrinh")
+                        .WithMany("BuocThucHiens")
+                        .HasForeignKey("QuyTrinhId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NguoiThucHien");
+
+                    b.Navigation("QuyTrinh");
+                });
+
+            modelBuilder.Entity("ManagementProject.Models.Comment", b =>
+                {
+                    b.HasOne("ManagementProject.Models.ApplicationUser", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ManagementProject.Models.Work", "Work")
+                        .WithMany("Comments")
+                        .HasForeignKey("WorkId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("Work");
+                });
+
             modelBuilder.Entity("ManagementProject.Models.Project", b =>
                 {
+                    b.HasOne("ManagementProject.Models.BuocThucHien", "BuocHienTai")
+                        .WithMany()
+                        .HasForeignKey("BuocHienTaiId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ManagementProject.Models.ApplicationUser", "CreatedUser")
                         .WithMany("Projects")
                         .HasForeignKey("CreatedId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("ManagementProject.Models.QuyTrinh", "QuyTrinh")
+                        .WithMany("Projects")
+                        .HasForeignKey("QuyTrinhId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("BuocHienTai");
+
                     b.Navigation("CreatedUser");
+
+                    b.Navigation("QuyTrinh");
                 });
 
             modelBuilder.Entity("ManagementProject.Models.ProjectMember", b =>
@@ -416,6 +710,44 @@ namespace ManagementProject.Migrations
                         .IsRequired();
 
                     b.Navigation("Member");
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("ManagementProject.Models.QuyTrinh", b =>
+                {
+                    b.HasOne("ManagementProject.Models.ApplicationUser", "NguoiTao")
+                        .WithMany("QuyTrinhs")
+                        .HasForeignKey("NguoiTaoId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("NguoiTao");
+                });
+
+            modelBuilder.Entity("ManagementProject.Models.Work", b =>
+                {
+                    b.HasOne("ManagementProject.Models.ApplicationUser", "AssignUser")
+                        .WithMany("AssignWorks")
+                        .HasForeignKey("AssignUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ManagementProject.Models.ApplicationUser", "CreatedUser")
+                        .WithMany("CreatedWorks")
+                        .HasForeignKey("CreatedUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ManagementProject.Models.Project", "Project")
+                        .WithMany("Works")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("AssignUser");
+
+                    b.Navigation("CreatedUser");
 
                     b.Navigation("Project");
                 });
@@ -473,9 +805,24 @@ namespace ManagementProject.Migrations
 
             modelBuilder.Entity("ManagementProject.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("AssignWorks");
+
+                    b.Navigation("BuocThucHiens");
+
+                    b.Navigation("Comments");
+
+                    b.Navigation("CreatedWorks");
+
                     b.Navigation("ProjectMembers");
 
                     b.Navigation("Projects");
+
+                    b.Navigation("QuyTrinhs");
+                });
+
+            modelBuilder.Entity("ManagementProject.Models.Comment", b =>
+                {
+                    b.Navigation("AttachmentFiles");
                 });
 
             modelBuilder.Entity("ManagementProject.Models.Department", b =>
@@ -486,6 +833,22 @@ namespace ManagementProject.Migrations
             modelBuilder.Entity("ManagementProject.Models.Project", b =>
                 {
                     b.Navigation("Members");
+
+                    b.Navigation("Works");
+                });
+
+            modelBuilder.Entity("ManagementProject.Models.QuyTrinh", b =>
+                {
+                    b.Navigation("BuocThucHiens");
+
+                    b.Navigation("Projects");
+                });
+
+            modelBuilder.Entity("ManagementProject.Models.Work", b =>
+                {
+                    b.Navigation("AttachmentFiles");
+
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

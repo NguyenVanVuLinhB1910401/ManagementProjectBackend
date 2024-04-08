@@ -1,6 +1,8 @@
-﻿using ManagementProject.DTOs;
+﻿using AutoMapper;
+using ManagementProject.DTOs;
 using ManagementProject.Interfaces;
 using ManagementProject.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -13,9 +15,11 @@ namespace ManagementProject.Controllers
     public class ProjectController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ProjectController(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public ProjectController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
 
@@ -25,12 +29,76 @@ namespace ManagementProject.Controllers
         {
             try
             {
-                var result = await _unitOfWork.Projects.GetAllProject();
+                var listProject = await _unitOfWork.Projects.GetAllProject();
+                if (listProject.Count() == 0)
+                {
+                    return NoContent();
+                }
+                var resultMap = _mapper.Map<List<GetAllProjectRes>>(listProject);
+             
+                return Ok(resultMap);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("Joined")]
+        //[Authorize(Roles = UserRoles.Admin + "," +UserRoles.Employee)]
+        public async Task<IActionResult> GetAllProjectJoined()
+        {
+            try
+            {
+                var userId = GetCurrentUserId();
+                var result = await _unitOfWork.Projects.GetAllProjectJoined(userId);
                 if (result.Count() == 0)
                 {
                     return NoContent();
                 }
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("Members/{projectId}")]
+        //[Authorize(Roles = UserRoles.Admin + "," + UserRoles.Employee)]
+        public async Task<IActionResult> GetInfoAllMemberByProject(string projectId)
+        {
+            try
+            {
+               
+                var result = await _unitOfWork.ProjectMembers.GetInfoMembersByProject(projectId);
+                if (result.Count() == 0)
+                {
+                    return NoContent();
+                }
+                
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("lichsuthuchiencongviec/{projectId}")]
+        //[Authorize(Roles = UserRoles.Admin + "," + UserRoles.Employee)]
+        public async Task<IActionResult> LichSuThucHienCongViec(string projectId)
+        {
+            try
+            {
+
+                var result = await _unitOfWork.Works.LichSuThucHienCongViec(projectId);
+                if (result.Count() == 0)
+                {
+                    return NoContent();
+                }
+                var resultMap = _mapper.Map<List<CongViecThucHienRes>>(result);
+                return Ok(resultMap);
             }
             catch (Exception ex)
             {
@@ -85,9 +153,35 @@ namespace ManagementProject.Controllers
 
         }
 
+        [HttpGet]
+        [Route("detail/{id}")]
+        public async Task<IActionResult> GetDetailProject(string id)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                var project = await _unitOfWork.Projects.GetDetailProject(id);
+                if (project == null)
+                {
+                    return NotFound(new { Status = "Failure", Message = "Dự án không tồn tại" });
+                }
+                var result = _mapper.Map<ProjectDetailRes>(project);
+
+                return Ok(new { Status = "Success", Project = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+
 
         [HttpPost]
-        //[Authorize( Roles = UserRoles.Admin )]
+        [Authorize(Roles = UserRoles.GiamDoc + "," + UserRoles.PhoGiamDoc)]
         public async Task<IActionResult> AddProject([FromBody] ProjectReq model)
         {
             try
@@ -100,6 +194,8 @@ namespace ManagementProject.Controllers
                 _unitOfWork.BeginTransaction();
 
                 //Create Project
+                BuocThucHien buocDauTien = await _unitOfWork.BuocThucHiens.GetBuocKhoiTao(model.QuyTrinhId);
+                if(buocDauTien == null) { return BadRequest("Không tìm thấy bước khởi tạo"); }
                 Project project = new Project()
                 {
                     Name = model.Name,
@@ -111,7 +207,9 @@ namespace ManagementProject.Controllers
                     isDelete = 0,   
                     Status = 1,
                     Created = DateTime.Now,
-                    CreatedId = GetCurrentUserId()
+                    CreatedId = GetCurrentUserId(),
+                    QuyTrinhId = model.QuyTrinhId,
+                    BuocHienTaiId = buocDauTien.Id
                 };
                 await _unitOfWork.Projects.Add(project);
                 _unitOfWork.Complete();
@@ -144,6 +242,7 @@ namespace ManagementProject.Controllers
 
         [HttpPut]
         [Route("{id}")]
+        [Authorize(Roles = UserRoles.GiamDoc + "," + UserRoles.PhoGiamDoc)]
         public async Task<IActionResult> UpdateProject(string id, [FromBody] ProjectReq model)
         {
             if (!ModelState.IsValid)
@@ -196,9 +295,32 @@ namespace ManagementProject.Controllers
 
         }
 
+        [HttpPut("update-status")]
+        [Authorize(Roles = UserRoles.GiamDoc)]
+
+        public async Task<IActionResult> UpdateStatus([FromBody] UpdateStatusProjectReq model)
+        {
+            try
+            {
+                var project = await _unitOfWork.Projects.GetById(model.Id);
+                if (project == null)
+                {
+                    return NotFound();
+                }
+                
+                project.Status = model.Status;
+                _unitOfWork.Complete();
+                return Ok(new { Status = 200, Message = "Trạng thái dự án đã được cập nhật" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
         [HttpDelete]
         [Route("{id}")]
-        //[Authorize(Roles = UserRoles.Admin)]
+        [Authorize(Roles = UserRoles.GiamDoc + "," + UserRoles.PhoGiamDoc)]
         public async Task<IActionResult> DeleteProject(string id)
         {
             if (!ModelState.IsValid)

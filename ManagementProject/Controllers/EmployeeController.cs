@@ -10,11 +10,13 @@ using System.Text.RegularExpressions;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ManagementProject.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = UserRoles.GiamDoc + "," + UserRoles.PhoGiamDoc)]
     public class EmployeeController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +26,7 @@ namespace ManagementProject.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = UserRoles.Employee)]
+        //[Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -84,7 +86,7 @@ namespace ManagementProject.Controllers
         [HttpPost]
         public async Task<IActionResult> AddEmployee([FromBody] EmployeeReq model)
         {
-            return await RegisterUser(model, new string[] { UserRoles.Employee });
+            return await RegisterUser(model, new string[] { UserRoles.ThanhVien });
         }
 
         private async Task<IActionResult> RegisterUser([FromBody] EmployeeReq model, string[] roles)

@@ -29,6 +29,7 @@ namespace ManagementProject.DTOs
         public List<Member>? Members { get; set; }
 
         //public int isDelete { get; set; }
+        public int QuyTrinhId { get; set; }
     }
 
     public class Member 

@@ -1,0 +1,106 @@
+{
+	"info": {
+		"_postman_id": "81b27a44-2edc-4ba0-8ce6-1656f7abe5ff",
+		"name": "13. Lý lịch tư pháp-IGate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "22814946"
+	},
+	"item": [
+		{
+			"name": "Gửi hồ sơ mới",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ4NXQiOiJNV0l5TkRJNVlqRTJaV1kxT0RNd01XSTNOR1ptTVRZeU5UTTJOVFZoWlRnMU5UTTNaVE5oTldKbVpERTFPVEE0TldFMVlUaGxNak5sTldFellqSXlZUSIsImtpZCI6Ik1XSXlOREk1WWpFMlpXWTFPRE13TVdJM05HWm1NVFl5TlRNMk5UVmhaVGcxTlRNM1pUTmhOV0ptWkRFMU9UQTROV0UxWVRobE1qTmxOV0V6WWpJeVlRX1JTMjU2IiwidHlwIjoiYXQrand0IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIwODllZjY2MS00NmJjLTRjNzQtOGYwZi1kYmJiNzU1ZGJkM2UiLCJhdXQiOiJBUFBMSUNBVElPTiIsImF1ZCI6IkpiQnJPdUxjczdLd28ySXRwX1U4MFJQNW02WWEiLCJuYmYiOjE3MDgzMDk1OTksImF6cCI6IkpiQnJPdUxjczdLd28ySXRwX1U4MFJQNW02WWEiLCJzY29wZSI6ImRlZmF1bHQiLCJpc3MiOiJodHRwczpcL1wvYXBpbS13b3JrZXIxOjk0NDNcL29hdXRoMlwvdG9rZW4iLCJleHAiOjE3MDg2Njk1OTksImlhdCI6MTcwODMwOTU5OSwianRpIjoiN2ViYzhiZmYtMzU2Mi00OTFkLWJjMGYtMjNjMDgxNDlmOTI3IiwiY2xpZW50X2lkIjoiSmJCck91TGNzN0t3bzJJdHBfVTgwUlA1bTZZYSJ9.WAH_BU9jGr27ytP0tLJ1QfuxDDaQ6NsclD3tE0MgywH7-W47WlWFXJ-pHnEVwEB2WcGn7M2DA6gO-M96KQQTBkMN_iVEPr5THQnSfYHrlSe4-Xcur2Uge5X-ojRZEiRBVA5YpPZ62uRMCzVNWxM_E1ZkcvjPUcm5HVoeLJNdQOz7oW4O9-ruN9MQRcSZT-hOW63o9JmR9wQg4rPj5r1Ax4rpBJWlCT39MMeBpPRamxca5cmh00raW1_YuCm516xegFzLC-AP4rRdTTFdTMna6dw1f6C51AC5IUxEtNTBEDaiEnRPTPhpeyfSZVqrirFmwpKDac3J8106xQPzo_ysdw"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "text/xml",
+						"type": "text"
+					},
+					{
+						"key": "SOAPAction",
+						"value": "http://angiang.gov.vn/operation/agesb/GuiHoSoMoi",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soapenv:Envelope \r\nxmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\r\n xmlns:edx=\"http://angiang.gov.vn/schemas/agesb/edXML\" \r\n xmlns:ages=\"http://angiang.gov.vn/schemas/agesb/agesbXML\"\r\n xmlns:oneg=\"http://angiang.gov.vn/schemas/agesb/onegateXML\">\r\n    <soapenv:Header xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n        <ns3:MessageHeader xmlns:ns3=\"http://angiang.gov.vn/schemas/agesb/edXML\">\r\n            <ns3:From>\r\n                <ns3:OrganId>28</ns3:OrganId>\r\n            </ns3:From>\r\n            <ns2:FieldCode xmlns:ns2=\"http://angiang.gov.vn/schemas/agesb/agesbXML\">06</ns2:FieldCode>\r\n            <ns2:ProcessCode xmlns:ns2=\"http://angiang.gov.vn/schemas/agesb/agesbXML\">97</ns2:ProcessCode>\r\n            <ns2:TypeCode xmlns:ns2=\"http://angiang.gov.vn/schemas/agesb/agesbXML\">01</ns2:TypeCode>\r\n        </ns3:MessageHeader>\r\n    </soapenv:Header>\r\n    <soapenv:Body>\r\n        <edx:MessageBody>\r\n            <ns2:BusinessData xmlns:ns2=\"http://angiang.gov.vn/schemas/agesb/agesbXML\"\r\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"ns2:BusinessData\">\r\n                <ns1:ThongTinHoSo xmlns:ns1=\"http://angiang.gov.vn/schemas/agesb/onegateXML\">\r\n                    <ns1:MaBNHS>HS-DEMO-07-12-2023-00003</ns1:MaBNHS>\r\n                    <ns1:TenToChuc />\r\n                    <ns1:TenNguoiNop>TEST</ns1:TenNguoiNop>\r\n                    <ns1:DiaChiNguoiNop>123, Phường Đông Xuyên, Thành phố Long Xuyên, Tỉnh\r\n\t\t\tAn Giang</ns1:DiaChiNguoiNop>\r\n                    <ns1:SoCMND>351351351</ns1:SoCMND>\r\n                    <ns1:DienThoai>0911161762</ns1:DienThoai>\r\n                    <ns1:TenDVCong>Thủ tục đăng ký LLTP</ns1:TenDVCong>\r\n                    <ns1:NgayNhanHS>2020-06-03 15:25:03</ns1:NgayNhanHS>\r\n                    <ns1:NgayHenTraHS>2020-06-04 15:25:03</ns1:NgayHenTraHS>\r\n                    <ns1:TinhTrangHS>Hồ sơ mới tiếp nhận</ns1:TinhTrangHS>\r\n                    <ns1:TrangThaiXuLy>0</ns1:TrangThaiXuLy>\r\n                    <ns1:PhongBanXuLy/>\r\n                    <ns1:CVXuLy>Phạm Ngọc Huệ</ns1:CVXuLy>\r\n                    <ns1:DuLieuChuyenNganh></ns1:DuLieuChuyenNganh>\r\n                </ns1:ThongTinHoSo>\r\n            </ns2:BusinessData>\r\n        </edx:MessageBody>\r\n    </soapenv:Body>\r\n</soapenv:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": "http://mekosoft.vn/motcua/ngoaitinh/nhan-ho-so/1.0/ho-so-moi"
+			},
+			"response": []
+		},
+		{
+			"name": "Lấy token",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic SmJCck91TGNzN0t3bzJJdHBfVTgwUlA1bTZZYTpXQkxMTEtZVkVRaUdhMllSWDdwbTBkTl95eWdh",
+						"type": "text"
+					},
+					{
+						"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://mekosoft.vn/oauth2/token?grant_type=client_credentials",
+					"protocol": "https",
+					"host": [
+						"mekosoft",
+						"vn"
+					],
+					"path": [
+						"oauth2",
+						"token"
+					],
+					"query": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

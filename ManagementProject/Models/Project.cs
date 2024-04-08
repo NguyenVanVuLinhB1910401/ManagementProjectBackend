@@ -20,5 +20,12 @@ namespace ManagementProject.Models
         public int isDelete { get; set; }
 
         public DateTime Created { get; set; }
+        public List<Work> Works { get; set; }
+
+        public int QuyTrinhId { get; set; }
+        public QuyTrinh QuyTrinh { get; set; }
+        public int BuocHienTaiId { get; set; }
+        public BuocThucHien BuocHienTai { get; set; }
+
     }
 }

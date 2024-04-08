@@ -11,6 +11,12 @@ namespace ManagementProject.Models
         public DbSet<Department> Departments { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectMember> ProjectMembers { get; set; }
+        public DbSet<Work> Works { get; set; }
+        public DbSet<AttachmentFile> AttachmentFiles { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<QuyTrinh> QuyTrinhs { get; set; }
+        public DbSet<BuocThucHien> BuocThucHiens { get; set; }
+        public DbSet<Nhan> Nhans { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
@@ -52,6 +58,11 @@ namespace ManagementProject.Models
                         .WithMany(p => p.Projects)
                         .HasForeignKey(e => e.CreatedId)
                         .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasOne<QuyTrinh>(e => e.QuyTrinh)
+                       .WithMany(p => p.Projects)
+                       .HasForeignKey(e => e.QuyTrinhId)
+                       .OnDelete(DeleteBehavior.NoAction);
             });
 
             builder.Entity<ProjectMember>(entity =>
@@ -68,6 +79,101 @@ namespace ManagementProject.Models
                         .HasForeignKey(e => e.MemberId)
                         .OnDelete(DeleteBehavior.NoAction);
             });
+
+            builder.Entity<Work>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Title).IsRequired(true).HasMaxLength(200);
+                entity.Property(e => e.Content).IsRequired(false).HasColumnType("nvarchar(MAX)");
+                entity.Property(e => e.CompleteDate).IsRequired(false);
+                entity.Property(e => e.Updated).IsRequired(false);
+                entity.Property(e => e.ParentWorkId).IsRequired(false);
+
+                entity.HasOne<ApplicationUser>(e => e.CreatedUser)
+                        .WithMany(p => p.CreatedWorks)
+                        .HasForeignKey(e => e.CreatedUserId)
+                        .OnDelete(DeleteBehavior.NoAction);
+                entity.HasOne<ApplicationUser>(e => e.AssignUser)
+                        .WithMany(p => p.AssignWorks)
+                        .HasForeignKey(e => e.AssignUserId)
+                        .OnDelete(DeleteBehavior.NoAction);
+                entity.HasOne<Project>(e => e.Project)
+                        .WithMany(p => p.Works)
+                        .HasForeignKey(e => e.ProjectId)
+                        .OnDelete(DeleteBehavior.NoAction);
+
+            });
+
+           
+
+            builder.Entity<AttachmentFile>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.FileName).IsRequired(true).HasMaxLength(100);
+                entity.Property(e => e.FileType).IsRequired(true).HasMaxLength(50);
+                entity.Property(e => e.FilePath).IsRequired(true);
+
+                entity.HasOne<Work>(e => e.Work)
+                        .WithMany(p => p.AttachmentFiles)
+                        .HasForeignKey(e => e.WorkId)
+                        .OnDelete(DeleteBehavior.NoAction);
+
+            });
+
+            builder.Entity<Comment>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Content).IsRequired(true).HasColumnType("text");
+                
+
+                entity.HasOne<Work>(e => e.Work)
+                        .WithMany(p => p.Comments)
+                        .HasForeignKey(e => e.WorkId)
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasOne<ApplicationUser>(e => e.User)
+                        .WithMany(p => p.Comments)
+                        .HasForeignKey(e => e.UserId)
+                        .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            builder.Entity<QuyTrinh>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.TenQuyTrinh).IsRequired(true);
+                entity.Property(e => e.NgayCapNhat).IsRequired(false);
+
+                entity.HasOne<ApplicationUser>(e => e.NguoiTao)
+                        .WithMany(p => p.QuyTrinhs)
+                        .HasForeignKey(e => e.NguoiTaoId)
+                        .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            builder.Entity<BuocThucHien>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => e.Code).IsUnique(true);
+                entity.Property(e => e.TenBuoc).IsRequired(true);
+                entity.Property(e => e.NgayCapNhat).IsRequired(false);
+
+                entity.HasOne<QuyTrinh>(e => e.QuyTrinh)
+                        .WithMany(p => p.BuocThucHiens)
+                        .HasForeignKey(e => e.QuyTrinhId);
+                entity.HasOne<ApplicationUser>(e => e.NguoiThucHien)
+                        .WithMany(p => p.BuocThucHiens)
+                        .HasForeignKey(e => e.NguoiThucHienId);
+            });
+
+            builder.Entity<Nhan>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.TenNhan).IsRequired(true).HasMaxLength(100);
+                entity.Property(e => e.LoaiNhan).IsRequired(true).HasMaxLength(50);
+                entity.Property(e => e.isLock).IsRequired(true);
+                entity.Property(e => e.Created).IsRequired(true);
+                entity.Property(e => e.Updated).IsRequired(false);
+            });
+
 
 
             //builder.Entity<EquipmentType>(entity =>

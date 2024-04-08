@@ -192,6 +192,60 @@ namespace ManagementProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "QuyTrinhs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TenQuyTrinh = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NgayTao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    NgayCapNhat = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    isDelete = table.Column<int>(type: "int", nullable: false),
+                    NguoiTaoId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QuyTrinhs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_QuyTrinhs_AspNetUsers_NguoiTaoId",
+                        column: x => x.NguoiTaoId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BuocThucHiens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TenBuoc = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NguoiThucHienId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    BuocTiepTheo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BuocTruocDo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NgayTao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    NgayCapNhat = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    QuyTrinhId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BuocThucHiens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BuocThucHiens_AspNetUsers_NguoiThucHienId",
+                        column: x => x.NguoiThucHienId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BuocThucHiens_QuyTrinhs_QuyTrinhId",
+                        column: x => x.QuyTrinhId,
+                        principalTable: "QuyTrinhs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Projects",
                 columns: table => new
                 {
@@ -206,7 +260,9 @@ namespace ManagementProject.Migrations
                     isProject = table.Column<int>(type: "int", nullable: false),
                     CreatedId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     isDelete = table.Column<int>(type: "int", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    QuyTrinhId = table.Column<int>(type: "int", nullable: false),
+                    BuocHienTaiId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -215,6 +271,17 @@ namespace ManagementProject.Migrations
                         name: "FK_Projects_AspNetUsers_CreatedId",
                         column: x => x.CreatedId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Projects_BuocThucHiens_BuocHienTaiId",
+                        column: x => x.BuocHienTaiId,
+                        principalTable: "BuocThucHiens",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Projects_QuyTrinhs_QuyTrinhId",
+                        column: x => x.QuyTrinhId,
+                        principalTable: "QuyTrinhs",
                         principalColumn: "Id");
                 });
 
@@ -240,6 +307,100 @@ namespace ManagementProject.Migrations
                         name: "FK_ProjectMembers_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Works",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(MAX)", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CompleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Progress = table.Column<int>(type: "int", nullable: false),
+                    CreatedUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AssignUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProjectId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ParentWorkId = table.Column<int>(type: "int", nullable: true),
+                    isChuyenBuoc = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Works", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Works_AspNetUsers_AssignUserId",
+                        column: x => x.AssignUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Works_AspNetUsers_CreatedUserId",
+                        column: x => x.CreatedUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Works_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    WorkId = table.Column<int>(type: "int", nullable: false),
+                    Content = table.Column<string>(type: "text", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Comments_Works_WorkId",
+                        column: x => x.WorkId,
+                        principalTable: "Works",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AttachmentFiles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FileName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    FileType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WorkId = table.Column<int>(type: "int", nullable: false),
+                    CommentId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AttachmentFiles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AttachmentFiles_Comments_CommentId",
+                        column: x => x.CommentId,
+                        principalTable: "Comments",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AttachmentFiles_Works_WorkId",
+                        column: x => x.WorkId,
+                        principalTable: "Works",
                         principalColumn: "Id");
                 });
 
@@ -288,6 +449,42 @@ namespace ManagementProject.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AttachmentFiles_CommentId",
+                table: "AttachmentFiles",
+                column: "CommentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AttachmentFiles_WorkId",
+                table: "AttachmentFiles",
+                column: "WorkId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BuocThucHiens_Code",
+                table: "BuocThucHiens",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BuocThucHiens_NguoiThucHienId",
+                table: "BuocThucHiens",
+                column: "NguoiThucHienId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BuocThucHiens_QuyTrinhId",
+                table: "BuocThucHiens",
+                column: "QuyTrinhId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_UserId",
+                table: "Comments",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_WorkId",
+                table: "Comments",
+                column: "WorkId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProjectMembers_MemberId",
                 table: "ProjectMembers",
                 column: "MemberId");
@@ -298,9 +495,39 @@ namespace ManagementProject.Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Projects_BuocHienTaiId",
+                table: "Projects",
+                column: "BuocHienTaiId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Projects_CreatedId",
                 table: "Projects",
                 column: "CreatedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_QuyTrinhId",
+                table: "Projects",
+                column: "QuyTrinhId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QuyTrinhs_NguoiTaoId",
+                table: "QuyTrinhs",
+                column: "NguoiTaoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Works_AssignUserId",
+                table: "Works",
+                column: "AssignUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Works_CreatedUserId",
+                table: "Works",
+                column: "CreatedUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Works_ProjectId",
+                table: "Works",
+                column: "ProjectId");
         }
 
         /// <inheritdoc />
@@ -322,13 +549,28 @@ namespace ManagementProject.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "AttachmentFiles");
+
+            migrationBuilder.DropTable(
                 name: "ProjectMembers");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "Works");
+
+            migrationBuilder.DropTable(
                 name: "Projects");
+
+            migrationBuilder.DropTable(
+                name: "BuocThucHiens");
+
+            migrationBuilder.DropTable(
+                name: "QuyTrinhs");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

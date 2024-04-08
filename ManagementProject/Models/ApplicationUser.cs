@@ -34,5 +34,10 @@ namespace ManagementProject.Models
         public List<Project> Projects { get; set; }
 
         public List<ProjectMember> ProjectMembers { get; set; }
+        public List<Work> CreatedWorks { get; set; }
+        public List<Work> AssignWorks { get; set; }
+        public List<Comment> Comments { get; set; }
+        public List<QuyTrinh> QuyTrinhs { get; set; }
+        public List<BuocThucHien> BuocThucHiens { get; set; }
     }
 }

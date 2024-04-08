@@ -21,8 +21,25 @@ namespace ManagementProject.Repositories
         public IProjectRepository Projects { get; }
 
         public IProjectMemberRepository ProjectMembers { get; }
+        public IWorkRepository Works { get; }
+        public IAttachmentFileRepository AttachmentFiles { get; }
+        public ICommentRepository Comments { get; }
+        public IQuyTrinhRepository QuyTrinhs { get; }
+        public IBuocThucHienRepository BuocThucHiens { get; }
 
-        public UnitOfWork(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IDepartmentRepository departments, IProjectRepository projects, IProjectMemberRepository projectMembers)
+        public UnitOfWork(ApplicationDbContext context, 
+            UserManager<ApplicationUser> userManager, 
+            RoleManager<IdentityRole> roleManager, 
+            IDepartmentRepository departments, 
+            IProjectRepository projects, 
+            IProjectMemberRepository projectMembers, 
+            IWorkRepository works,
+            IAttachmentFileRepository attachmentFiles,
+            ICommentRepository comments,
+            IQuyTrinhRepository quyTrinhs,
+            IBuocThucHienRepository buocThucHiens
+            
+            )
         {
             this._context = context;
             this._userManager = userManager;
@@ -30,6 +47,12 @@ namespace ManagementProject.Repositories
             this.Departments = departments;
             this.Projects = projects;
             this.ProjectMembers = projectMembers;
+            this.Works = works;
+            this.AttachmentFiles = attachmentFiles;
+            this.Comments = comments;
+            this.QuyTrinhs = quyTrinhs;
+            this.BuocThucHiens = buocThucHiens;
+            
         }
 
         public int Complete()

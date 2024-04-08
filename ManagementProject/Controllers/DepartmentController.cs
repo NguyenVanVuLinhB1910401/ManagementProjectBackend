@@ -12,6 +12,7 @@ namespace ManagementProject.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = UserRoles.GiamDoc)]
     public class DepartmentController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -22,7 +23,7 @@ namespace ManagementProject.Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = "" + UserRoles.Admin + ", " + UserRoles.Director)]
+        //[Authorize(Roles = "" + UserRoles.Admin + ", " + UserRoles.Director)]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -43,7 +44,7 @@ namespace ManagementProject.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        [Authorize(Roles = UserRoles.Admin)]
+        //[Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> Get(string id)
         {
             try
@@ -137,7 +138,7 @@ namespace ManagementProject.Controllers
         [HttpDelete]
         [Route("{id}")]
         //[Authorize(Roles = UserRoles.Admin)]
-        public async Task<IActionResult> DeleteEquipment(string id)
+        public async Task<IActionResult> DeleteDepartment(string id)
         {
             if (!ModelState.IsValid)
             {

@@ -35,17 +35,20 @@ namespace ManagementProject.Controllers
                 if (user != null && await _unitOfWork.UserManager.CheckPasswordAsync(user, model.Password))
                 {
                     if (user.isLock == 1) return BadRequest(new { Status = "Failure", Message = "Tài khoản đã bị khóa." });
+                    if (user.Status == 0) return BadRequest(new { Status = "Failure", Message = "Tài khoản đã bị xóa." });
                     var userRoles = await _unitOfWork.UserManager.GetRolesAsync(user);
 
                     var authClaims = new List<Claim>
                         {
                             new Claim(ClaimTypes.Name, user.UserName ),
                             new Claim("Id", user.Id ),
+                            new Claim("FullName", user.FirstName + " " + user.LastName),
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                         };
 
                     foreach (var userRole in userRoles)
                     {
+                        authClaims.Add(new Claim("Roles", userRole));
                         authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                     }
                     var token = CreateToken(authClaims);
@@ -145,18 +148,25 @@ namespace ManagementProject.Controllers
 
 
 
-        [HttpPost]
-        [Route("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
-        {
-            return await RegisterUser(model, new string[] { UserRoles.Employee });
-        }
+        //[HttpPost]
+        //[Route("register")]
+        //public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        //{
+        //    return await RegisterUser(model, new string[] { UserRoles.Employee });
+        //}
 
         [HttpPost]
         [Route("register-admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
         {
-            return await RegisterUser(model, new string[] { UserRoles.Admin });
+            return await RegisterUser(model, new string[] { UserRoles.GiamDoc });
+        }
+
+        [HttpPost]
+        [Route("register-truong-nhom")]
+        public async Task<IActionResult> RegisterTruongNhom([FromBody] RegisterModel model)
+        {
+            return await RegisterUser(model, new string[] { UserRoles.TruongNhom });
         }
 
         private async Task<IActionResult> RegisterUser([FromBody] RegisterModel model, string[] roles)
